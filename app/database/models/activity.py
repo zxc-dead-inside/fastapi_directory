@@ -24,7 +24,7 @@ class Activity(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         nullable=False, server_default=text("0")
     )
 
-    parent: Mapped["Activity" | None] = relationship(
+    parent: Mapped["Activity | None"] = relationship(
         remote_side="Activity.id", backref="children"
     )
 

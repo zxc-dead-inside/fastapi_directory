@@ -1,17 +1,28 @@
-[project]
+[tool.poetry]
 name = "restapi"
 version = "0.1.0"
-description = ""
-authors = [
-    {name = "zxc-dead-inside",email = "maks.arhipkin@mail.ru"}
-]
+description = "REST API каталог организаций"
+authors = ["zxc-dead-inside <maks.arhipkin@mail.ru>"]
 readme = "README.md"
-requires-python = ">=3.10"
-dependencies = [
-    "sqlalchemy (>=2.0.43,<3.0.0)"
-]
+packages = [{ include = "app" }]
 
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.115.0"
+sqlalchemy = "^2.0.43"
+alembic = "^1.14.0"
+asyncpg = "^0.29.0"
+pydantic = "^2.9.0"
+pydantic-settings = "^2.5.0"
+uvicorn = "^0.30.0"
+psycopg2-binary = "^2.9.11"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.0"
+black = "^24.8.0"
+isort = "^5.13.2"
+ruff = "^0.5.7"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core>=2.0.0"]
 build-backend = "poetry.core.masonry.api"
