@@ -6,12 +6,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-RUN pip install --upgrade pip && pip install poetry
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir "poetry>=1.8.3"
 
 COPY pyproject.toml poetry.lock* ./
 
-RUN poetry config virtualenvs.create false \
-    && poetry install --no-interaction --no-ansi --only main
+RUN poetry config virtualenvs.create false && \
+    poetry install --no-root --no-interaction --no-ansi
 
 COPY app ./app
 COPY migrations ./migrations

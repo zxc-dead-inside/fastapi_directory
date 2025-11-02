@@ -28,19 +28,6 @@ class LoggingMiddleware(BaseHTTPMiddleware):
                 logger.warning(f"{request.method} {request.url.path} завершился без ответа.")
 
 
-class APIKeyMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        path = request.url.path
-        if path.startswith("/api/v1/"):
-            api_key = request.headers.get("X-API-Key")
-
-            if not api_key or api_key != settings.api_key:
-                logger.warning(f"Неавторизованный доступ: {request.url.path}")
-                raise HTTPException(status_code=401, detail="Invalid or missing API key")
-
-        return await call_next(request)
-
-
 class ExceptionHandlerMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         try:

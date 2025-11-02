@@ -3,7 +3,7 @@ from uuid import UUID
 
 from sqlalchemy import select, func, and_
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, selectinload
 
 from app.database import Activity, Organization, Office, Building
 
@@ -20,7 +20,12 @@ class OrganizationRepository:
             .join(Organization.offices)
             .join(Office.building)
             .where(Building.id == building_id)
-            .options(joinedload(Organization.activities))
+            .options(
+                selectinload(Organization.activities),
+                selectinload(Organization.phones),
+                selectinload(Organization.offices).selectinload(
+                    Office.building),
+            )
         )
         result = await self.session.execute(stmt)
         return result.scalars().unique().all()
@@ -50,7 +55,12 @@ class OrganizationRepository:
             select(Organization)
             .join(Organization.activities)
             .where(Activity.id.in_(select(cte.c.id)))
-            .options(joinedload(Organization.activities))
+            .options(
+                selectinload(Organization.activities),
+                selectinload(Organization.phones),
+                selectinload(Organization.offices).selectinload(
+                    Office.building),
+            )
         )
 
         result = await self.session.execute(stmt)
@@ -63,7 +73,12 @@ class OrganizationRepository:
         stmt = (
             select(Organization)
             .where(func.lower(Organization.name).ilike(f"%{query.lower()}%"))
-            .options(joinedload(Organization.activities))
+            .options(
+                selectinload(Organization.activities),
+                selectinload(Organization.phones),
+                selectinload(Organization.offices).selectinload(
+                    Office.building),
+            )
         )
         result = await self.session.execute(stmt)
         return result.scalars().unique().all()
@@ -90,7 +105,12 @@ class OrganizationRepository:
                     Building.lon <= lon_max,
                 )
             )
-            .options(joinedload(Organization.activities))
+            .options(
+                selectinload(Organization.activities),
+                selectinload(Organization.phones),
+                selectinload(Organization.offices).selectinload(
+                    Office.building),
+            )
         )
         result = await self.session.execute(stmt)
         return result.scalars().unique().all()
@@ -100,8 +120,10 @@ class OrganizationRepository:
             select(Organization)
             .where(Organization.id == organization_id)
             .options(
-                joinedload(Organization.activities),
-                joinedload(Organization.offices).joinedload(Office.building),
+                selectinload(Organization.activities),
+                selectinload(Organization.phones),
+                selectinload(Organization.offices).selectinload(
+                    Office.building),
             )
         )
         result = await self.session.execute(stmt)
@@ -111,7 +133,12 @@ class OrganizationRepository:
         stmt = (
             select(Organization)
             .limit(limit)
-            .options(joinedload(Organization.activities))
+            .options(
+                selectinload(Organization.activities),
+                selectinload(Organization.phones),
+                selectinload(Organization.offices).selectinload(
+                    Office.building),
+            )
         )
         result = await self.session.execute(stmt)
         return result.scalars().unique().all()

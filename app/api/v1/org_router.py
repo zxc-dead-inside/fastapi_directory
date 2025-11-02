@@ -2,7 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Query, HTTPException, status, Depends
 
-from app.api.v1.dependencies import get_organization_service
+from app.api.v1.dependencies import get_organization_service, verify_api_key
 from app.schemas.org_response import OrganizationListResponse, \
     OrganizationDetailResponse
 from app.services.org_service import OrganizationService
@@ -10,6 +10,7 @@ from app.services.org_service import OrganizationService
 router = APIRouter(
     prefix="/organizations",
     tags=["Organizations"],
+    dependencies=[Depends(verify_api_key)]
 )
 
 

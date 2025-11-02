@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 
-from app.api.middleware import ExceptionHandlerMiddleware, LoggingMiddleware, \
-    APIKeyMiddleware
+from app.api.middleware import ExceptionHandlerMiddleware, LoggingMiddleware
 from app.api.v1 import api_router
 from app.core.logger import logger
 
@@ -9,7 +8,6 @@ app = FastAPI(title="Organization Directory API", version="1.0")
 
 app.add_middleware(ExceptionHandlerMiddleware)
 app.add_middleware(LoggingMiddleware)
-app.add_middleware(APIKeyMiddleware)
 
 
 @app.get("/health", tags=["System"])
